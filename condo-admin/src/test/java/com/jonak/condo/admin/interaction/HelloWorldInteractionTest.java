@@ -46,7 +46,7 @@ public class HelloWorldInteractionTest {
             StepVerifier.create(responsePublisher)
                     .expectNextMatches(response -> {
                         assertTrue(response.success);
-                        assertTrue(response.errors == null);
+                        assertTrue(response.validationErrors == null);
 
                         assertTrue(response instanceof HelloWorldResponse);
                         HelloWorldResponse helloWorldResponse = (HelloWorldResponse) response;
@@ -71,7 +71,7 @@ public class HelloWorldInteractionTest {
             StepVerifier.create(responsePublisher)
                     .expectNextMatches(response -> {
                         assertFalse(response.success);
-                        assertFalse(response.errors.isEmpty());
+                        assertFalse(response.validationErrors.isEmpty());
                         return true;
                     })
                     .expectComplete()

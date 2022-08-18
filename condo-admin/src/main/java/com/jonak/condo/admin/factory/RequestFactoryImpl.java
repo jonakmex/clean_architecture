@@ -1,7 +1,6 @@
 package com.jonak.condo.admin.factory;
 
 import com.jonak.boundary.Request;
-import com.jonak.condo.admin.boundary.HelloWorldRequest;
 import com.jonak.factory.RequestFactory;
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -6,11 +6,13 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.util.Map;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper=false)
 @JsonIgnoreProperties({ "httpStatus" })
-public class HelloWorldResponse extends Response{
-    public String greet;
+public class SystemErrorResponse extends Response {
+    public Map<String,String> systemErrors;
 }
