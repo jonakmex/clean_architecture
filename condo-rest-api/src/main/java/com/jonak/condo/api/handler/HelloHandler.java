@@ -2,8 +2,7 @@ package com.jonak.condo.api.handler;
 
 import com.jonak.boundary.Interaction;
 import com.jonak.boundary.Request;
-import com.jonak.condo.api.mapper.VmMapper;
-import com.jonak.condo.api.vm.HelloWorldResponse;
+import com.jonak.condo.api.presenter.HelloWorldPresenter;
 import com.jonak.factory.RequestFactory;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -31,8 +30,9 @@ public class HelloHandler {
                 new AbstractMap.SimpleImmutableEntry<>("name", name))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
 
-        return ServerResponse.ok().body(helloWorldInteraction.execute(request)
-        .flatMap(r -> Mono.just(VmMapper.makeHelloWorldResponse(r)))
-        , HelloWorldResponse.class);
+        HelloWorldPresenter helloWorldPresenter = new HelloWorldPresenter();
+        helloWorldInteraction.execute(request,helloWorldPresenter);
+
+        return helloWorldPresenter.getServerResponse();
     }
 }

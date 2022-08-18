@@ -42,19 +42,21 @@ public class HelloWorldInteractionTest {
         Request request = requestFactory.make("HelloWorldRequest", Stream.of(
                 new AbstractMap.SimpleImmutableEntry<>("name", name))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
+        helloWorldInteraction.execute(request,responsePublisher -> {
+            StepVerifier.create(responsePublisher)
+                    .expectNextMatches(response -> {
+                        assertTrue(response.success);
+                        assertTrue(response.validationErrors == null);
 
-        StepVerifier.create(helloWorldInteraction.execute(request))
-                .expectNextMatches(response -> {
-                    assertTrue(response.success);
-                    assertTrue(response.errors == null);
+                        assertTrue(response instanceof HelloWorldResponse);
+                        HelloWorldResponse helloWorldResponse = (HelloWorldResponse) response;
+                        assertEquals("Hello Jonathan",helloWorldResponse.greet);
+                        return true;
+                    })
+                    .expectComplete()
+                    .verify();
+        });
 
-                    assertTrue(response instanceof HelloWorldResponse);
-                    HelloWorldResponse helloWorldResponse = (HelloWorldResponse) response;
-                    assertEquals("Hello Jonathan",helloWorldResponse.greet);
-                    return true;
-                })
-                .expectComplete()
-                .verify();
     }
 
     @Test
@@ -65,14 +67,17 @@ public class HelloWorldInteractionTest {
                 new AbstractMap.SimpleImmutableEntry<>("name", name))
                 .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
 
-        StepVerifier.create(helloWorldInteraction.execute(request))
-                .expectNextMatches(response -> {
-                    assertFalse(response.success);
-                    assertFalse(response.errors.isEmpty());
-                    return true;
-                })
-                .expectComplete()
-                .verify();
+        helloWorldInteraction.execute(request,responsePublisher -> {
+            StepVerifier.create(responsePublisher)
+                    .expectNextMatches(response -> {
+                        assertFalse(response.success);
+                        assertFalse(response.validationErrors.isEmpty());
+                        return true;
+                    })
+                    .expectComplete()
+                    .verify();
+        });
+
     }
 
 }
