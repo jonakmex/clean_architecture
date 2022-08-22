@@ -16,6 +16,7 @@ public class CondoRouter {
     @Bean
     public RouterFunction<ServerResponse> route(HelloHandler helloHandler) {
         return RouterFunctions.route(
-                GET("/hello/{name}"),helloHandler::hello);
+                GET("/"),helloHandler::health)
+                    .andRoute(GET("/hello/{name}"),helloHandler::hello);
     }
 }

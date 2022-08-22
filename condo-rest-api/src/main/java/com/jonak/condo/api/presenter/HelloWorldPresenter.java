@@ -10,12 +10,19 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
+
 @Data
 public class HelloWorldPresenter implements Presenter {
+
+    private static final Logger log = LoggerFactory.getLogger(HelloWorldPresenter.class);
 
     @Setter(AccessLevel.PRIVATE)
     private Mono<ServerResponse> serverResponse;
@@ -42,7 +49,7 @@ public class HelloWorldPresenter implements Presenter {
     private Response makeSuccessResponse(com.jonak.boundary.Response response) {
         HelloWorldResponse helloWorldResponseVm = new HelloWorldResponse();
         helloWorldResponseVm.httpStatus = HttpStatus.OK;
-        helloWorldResponseVm.greet = ((com.jonak.condo.admin.boundary.HelloWorldResponse) response).greet;
+        helloWorldResponseVm.greet = ((com.jonak.condo.admin.boundary.HelloWorldResponse) response).greet +" from "+getHostAddress();
         return helloWorldResponseVm;
     }
 
@@ -70,4 +77,13 @@ public class HelloWorldPresenter implements Presenter {
         validationErrorResponse.validationErrors = response.validationErrors;
         return validationErrorResponse;
     }
+
+    private String getHostAddress() {
+        String hostaddress = "";
+        try {
+            hostaddress =  InetAddress.getLocalHost().getHostAddress();
+        } catch (UnknownHostException e) {
+            log.error("Error while fetching hostaddress:", e);
+        }
+        return hostaddress;}
 }

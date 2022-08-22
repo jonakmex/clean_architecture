@@ -35,4 +35,8 @@ public class HelloHandler {
 
         return helloWorldPresenter.getServerResponse();
     }
+
+    public  Mono<ServerResponse> health(ServerRequest serverRequest) {
+        return ServerResponse.ok().build();
+    }
 }
